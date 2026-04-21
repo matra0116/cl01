@@ -30,20 +30,21 @@
             background: rgba(255, 255, 255, 0.1) !important;
             border: 1px solid rgba(98, 106, 160, 0.5) !important;
             color: white !important;
-            color-scheme: dark; /* これを追加：ブラウザに「この要素はダークモード用だよ」と伝えます */
+            color-scheme: dark;
         }
-
-        /* 選択肢（ドロップダウンの中身）の背景と文字色を強制指定 */
-        select option {
-            background-color: #1a1d2e; /* 濃い紺色 */
-            color: white;
-        }
+        select option { background-color: #1a1d2e; color: white; }
+        
+        /* SNSアイコンを公式ロゴとして表示するための設定 */
         .sns-icon {
-            display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px;
-            background: rgba(98, 106, 160, 0.2); transition: 0.2s; color: #e0e0e0;
+            display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%;
+            background: white; /* ロゴを見やすくするため背景を白に */
+            transition: 0.2s;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
-        .sns-icon:hover { background: #CD97B4; color: white; }
-        .sns-icon svg { width: 18px; height: 18px; fill: currentColor; }
+        .sns-icon:hover { transform: scale(1.1); box-shadow: 0 0 10px #CD97B4; }
+        .sns-icon img { width: 24px; height: 24px; object-fit: contain; }
+        
         @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.8; } }
     </style>
 </head>
@@ -52,7 +53,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header class="py-10 text-center">
             <h1 class="text-3xl sm:text-4xl font-bold tracking-widest mb-2"><span class="accent-text">CREATOR</span> LIST</h1>
-            <p class="text-gray-400 text-sm">星結プロダクション 提携クリエイター</p>
+            <p class="text-gray-400 text-sm">星結プロダクション 提携・依頼実績クリエイター</p>
         </header>
 
         <div class="mb-10 pb-8 border-b border-[#CD97B4]/20">
@@ -63,7 +64,7 @@
                 </div>
                 <div class="relative w-full md:w-60">
                     <i data-lucide="filter" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
-                    <select id="typeFilter" class="w-full pl-10 pr-4 py-2 rounded-full appearance-none cursor-pointer text-white">
+                    <select id="typeFilter" class="w-full pl-10 pr-4 py-2 rounded-full appearance-none cursor-pointer">
                         <option value="all">すべての種類</option>
                         <option value="見本">すべての種類</option>
                         <option value="イラストレーター">イラストレーター</option>
@@ -88,23 +89,18 @@
 
         let creators = [];
 
-        // SNSアイコンのSVGデータを定義
-        const SNS_ICONS = {
-            // X (公式ロゴ形状)
-            x_url: '<svg viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>',
-            // YouTube (公式ロゴ形状)
-            youtube_url: '<svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
-            // Skeb (公式のSロゴ)
-            skeb_url: '<svg viewBox="0 0 512 512"><path d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0zm97.7 341.2c-20 17.6-45.1 26.5-75.1 26.5-38 0-66.6-13.8-85.7-41.5l30.3-25.1c13.7 19 33.1 28.6 58.1 28.6 18.2 0 31.8-5.1 40.7-15.3 8.9-10.2 13.3-21.6 13.3-34.1 0-11.8-3.7-21.3-11.1-28.4-7.4-7.1-19.4-13.4-36.1-18.9-24.8-8.2-43.1-16.7-54.8-25.4-18.7-13.9-28.1-34.1-28.1-60.6 0-25.1 8.8-46 26.5-62.6 17.6-16.6 40.8-24.9 69.4-24.9 31.9 0 57.6 11.2 77.2 33.6l-28 23.3c-13.5-16.1-30.1-24.2-49.8-24.2-15.5 0-27.1 3.9-34.7 11.6-7.6 7.7-11.4 17.5-11.4 29.4 0 10.1 3.4 18.5 10.1 25.1 6.7 6.6 17.3 12.3 31.9 17.1 26.5 8.7 45.9 17.9 58.1 27.6 18.8 14.9 28.2 36.1 28.2 63.6 0 28.6-11.3 52.4-33.8 71.3z"/></svg>',
-            // Booth (公式の丸Bロゴ)
-            booth_url: '<svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm3.8 15.6c0 1.2-.4 2.1-1.2 2.7-.8.6-1.9.9-3.2.9H8.5V4.8h3.1c1.3 0 2.4.3 3.2.9.8.6 1.2 1.5 1.2 2.7 0 .9-.3 1.6-.9 2.1.8.4 1.2 1.2 1.2 2.3 0 1.1-.4 2-1.2 2.8zM10.5 6.6v3.4h1.1c.5 0 .9-.1 1.2-.4.3-.3.4-.7.4-1.3s-.1-1-.4-1.3c-.3-.3-.7-.4-1.2-.4h-1.1zm0 5.4v3.8h1.4c.5 0 1-.1 1.3-.4.3-.3.5-.8.5-1.5s-.2-1.2-.5-1.5c-.3-.3-.8-.4-1.3-.4h-1.4z"/></svg>',
-            // Foriio (公式のfロゴ)
-            foriio_url: '<svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm3.3 16.5h-2.2v-6.6h-2.2v6.6h-2.2v-8.8h6.6v8.8z"/></svg>',
-            // lit.link (公式に近いリンク形状)
-            litlink_url: '<svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>',
-            website_url: '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>',
-            other_url: '<svg viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>'
+        // ドメインから公式アイコンを取得するための設定
+        const SNS_DOMAINS = {
+            x_url: 'x.com',
+            youtube_url: 'youtube.com',
+            litlink_url: 'lit.link',
+            foriio_url: 'foriio.com',
+            skeb_url: 'skeb.jp',
+            booth_url: 'booth.pm',
+            website_url: '', // 個別HPはサイトごとにアイコンが変わる
+            other_url: ''
         };
+
         async function init() {
             createStars();
             try {
@@ -141,10 +137,17 @@
                 noResults.classList.add('hidden');
                 filtered.forEach(c => {
                     let snsHtml = '';
-                    Object.keys(SNS_ICONS).forEach(key => {
+                    Object.keys(SNS_DOMAINS).forEach(key => {
                         const url = (c[key] || '').trim();
                         if (url && url.startsWith('http')) {
-                            snsHtml += `<a href="${url}" target="_blank" class="sns-icon" rel="noopener">${SNS_ICONS[key]}</a>`;
+                            // URLからドメインを抽出するか、設定したドメインを使用してアイコンを取得
+                            const domain = SNS_DOMAINS[key] || new URL(url).hostname;
+                            const iconUrl = `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
+                            
+                            snsHtml += `
+                                <a href="${url}" target="_blank" class="sns-icon" rel="noopener">
+                                    <img src="${iconUrl}" alt="icon" onerror="this.src='https://lucide.dev/api/icon/link'">
+                                </a>`;
                         }
                     });
 
@@ -154,7 +157,7 @@
                         <img src="${c.icon_url || 'https://api.dicebear.com/7.x/initials/svg?seed=' + c.name}" class="w-24 h-24 rounded-full mb-4 object-cover border-2 border-[#626AA0]" onerror="this.src='https://api.dicebear.com/7.x/initials/svg?seed=${c.name}'">
                         <div class="text-[10px] font-bold px-3 py-1 rounded-full base-bg mb-2 inline-block text-white">${c.creator_type}</div>
                         <h2 class="text-lg font-bold mb-3">${c.name}</h2>
-                        <div class="flex flex-wrap justify-center gap-2 mb-4">${snsHtml}</div>
+                        <div class="flex flex-wrap justify-center gap-3 mb-4">${snsHtml}</div>
                         ${c.note ? `<p class="text-xs text-gray-400 mt-2 line-clamp-3">${c.note}</p>` : ''}
                     `;
                     grid.appendChild(card);
