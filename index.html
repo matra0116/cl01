@@ -26,7 +26,18 @@
         .creator-card:hover { transform: translateY(-5px); border-color: #CD97B4; background: rgba(255, 255, 255, 0.08); }
         .accent-text { color: #CD97B4; }
         .base-bg { background-color: #626AA0; }
-        input, select { background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(98, 106, 160, 0.5) !important; color: white !important; }
+        input, select {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(98, 106, 160, 0.5) !important;
+            color: white !important;
+            color-scheme: dark; /* これを追加：ブラウザに「この要素はダークモード用だよ」と伝えます */
+        }
+
+        /* 選択肢（ドロップダウンの中身）の背景と文字色を強制指定 */
+        select option {
+            background-color: #1a1d2e; /* 濃い紺色 */
+            color: white;
+        }
         .sns-icon {
             display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px;
             background: rgba(98, 106, 160, 0.2); transition: 0.2s; color: #e0e0e0;
